@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Document</title>
+</head>
+<body>
+  <h1>🗼 Tower Defense ECS</h1>
+  
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  
+  <div id="ui">
+    <div class="controls">
+      <button id="btn-tower-basic" class="active">Basic Tower [1] - 50g</button>
+      <button id="btn-tower-sniper">Sniper Tower [2] - 120g</button>
+      <button id="btn-spawn-enemy">Spawn Enemy [SPACE]</button>
+    </div>
+    <div class="info">
+      <p>💰 Gold: <span id="gold">100</span> |
+      ❤️ Lives: <span id="lives">20</span> | 
+      💀 Enemies: <span id="enemies">0</span> | 
+      🗼 Towers: <span id="towers">0</span>
+      </p>
+      <p>Click on canvas to place tower. Press 1 or 2 to select tower type.</p>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
