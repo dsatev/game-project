@@ -10,7 +10,7 @@ export const Enemy = (speed, reward) => ({speed, reward});
 
 export const Tower = (range, damage, rateOfFire, lastFired = 0) => ({range, damage, rateOfFire, lastFired});
 
-export const Projectile = (speed, damage, targetId) => ({speed, damage, targetId});
+export const Projectile = (speed, damage, targetId, aoeRadius) => ({speed, damage, targetId, aoeRadius});
 
 export const Path = (waypoints, currentWaypointIndex = 0) => ({waypoints, currentWaypointIndex});
 

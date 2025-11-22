@@ -31,7 +31,27 @@ export const projectileSystem = (world) => {
         const dist = distance(projPos, targetPos);
 
         if(dist < 10) {
-            enemyDamage[target.id] = (enemyDamage[target.id] || 0) + projComp.damage;
+             if (projComp.aoeRadius && projComp.aoeRadius > 0) {
+                const radius = projComp.aoeRadius;
+                console.log('worrks!')
+                world.entities.forEach(e => {
+                    const pos = e.components.position;
+                    const hp = e.components.health;
+                    if (pos && hp) {
+                        const d = distance(pos, targetPos);
+                        console.log('Checking entity:', e.id, 'distance:', d, 'has health:', !!hp);
+                        if (d <= radius) {
+                            console.log('AOE HIT entity:', e.id);
+                            enemyDamage[e.id] = (enemyDamage[e.id] || 0) + projComp.damage;
+                        }
+                    }
+                });
+            } else {
+                // single-target damage
+                enemyDamage[target.id] = (enemyDamage[target.id] || 0) + projComp.damage;
+
+            }
+
             projectilesToRemove.push(proj.id);
             return;
         }

@@ -30,19 +30,26 @@ export const TOWER_TYPES = {
         range: 100,
         damage: 30,
         rateOfFire: 1000,
+        color: '#44ff44',
+        projColor: '#44ff44',
         cost: 50
     },
     SNIPER:{
         range: 300,
         damage: 80,
-        rateOfFire: 2000,
+        rateOfFire: 2000, 
+        color: '#4444ff',
+        projColor: '#444ff4',
         cost: 120
     },
     AOE:{
         range: 200,
-        damage: 30,
+        damage: 15,
         rateOfFire: 1500,
-        cost: 80
+        color: '#ff4444',
+        aoeRadius: 80,
+        projColor: '#ff4444',
+        cost: 10
     }
 }
 

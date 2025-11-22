@@ -12,7 +12,6 @@ export const movementSystem = (world) => {
         const path = entity.components.path;
         const enemy = entity.components.enemy;
 
-        // Check if waypoints array exists and has elements
         if (!path.waypoints || path.waypoints.length === 0 || path.currentWaypointIndex >= path.waypoints.length) {
             return {
                 ...entity,
@@ -25,7 +24,6 @@ export const movementSystem = (world) => {
 
         const target = path.waypoints[path.currentWaypointIndex];
 
-        // Additional safety check
         if (!target || typeof target.x === 'undefined' || typeof target.y === 'undefined') {
             return entity;
         }

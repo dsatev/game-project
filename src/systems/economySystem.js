@@ -1,4 +1,4 @@
-let gold = 100;
+let gold = 1000;
 let lives = 20;
 
 export const getGold = () => gold;
@@ -21,14 +21,14 @@ export const loseLife = (amount = 1) => {
     lives -= amount;
 
     if (lives <= 0) {
-        lives = 0; // Don't go negative
-        return true; // Game over
+        lives = 0; 
+        return true; 
     }
     return false;
 };
 
 export const resetEconomy = () => {
-    gold = 100;
+    gold = 1000;
     lives = 20;
 };
 

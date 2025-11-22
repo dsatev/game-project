@@ -73,11 +73,9 @@ const updateUI = (world) => {
     const type = btn.id.includes('basic') ? 'BASIC' : 'SNIPER';
     const cost = TOWER_TYPES[type].cost;
     
-    // Disable ako nema dovoljno golda
     btn.disabled = gold < cost;
     btn.style.opacity = gold < cost ? '0.5' : '1';
     
-    // Highlight selected
     if (type === selectedType) {
       btn.classList.add('active');
     } else {
@@ -91,14 +89,14 @@ const updateUI = (world) => {
 const restartGame = () => {
   console.log('🔄 Restarting game...');
 
-  // Reset all game state
+
   world = initWorld();
   resetEconomy();
   resetGameOver();
   resetWaves();
   lastTime = 0;
 
-  // Restart game loop
+  
   requestAnimationFrame(gameLoop);
 
   console.log('✅ Game restarted!');
@@ -111,16 +109,16 @@ const gameLoop = (currentTime) => {
   const deltaTime = currentTime - lastTime;
   lastTime = currentTime;
 
-  // Check for game over
+  
   if (isGameOver()) {
     if (gameLoopRunning) {
       console.log('💀 GAME OVER! Press R to restart');
       gameLoopRunning = false;
     }
-    return; // Stop the game loop
+    return; 
   }
 
-  // Update world time
+  
   world = {
     ...world,
     time: currentTime,
@@ -161,7 +159,7 @@ document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
     const type = btn.id.includes('basic') ? 'BASIC' : 'SNIPER';
     console.log('🎯 Tower button clicked:', type);
 
-    // Update selection
+    
     setSelectedTowerType(type);
 
     document.querySelectorAll('button[id^="btn-tower"]').forEach(b =>
@@ -171,7 +169,4 @@ document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
   });
 });
 
-
-
-// Start game loop
 requestAnimationFrame(gameLoop);

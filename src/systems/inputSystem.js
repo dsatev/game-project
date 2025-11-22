@@ -4,7 +4,7 @@ import { spendGold, getGold } from './economySystem.js';
 import { TOWER_TYPES } from '../game/config.js';
 
 
-let selectedTowerType = 'BASIC';
+export let selectedTowerType = 'BASIC';
 let lastClickPos = null;
 
 export const initInput = (canvas) => {
@@ -21,7 +21,9 @@ export const initInput = (canvas) => {
             selectedTowerType = 'BASIC';
         } else if (event.key === '2') {
             selectedTowerType = 'SNIPER';
-        } 
+        } else if (event.key === '3') {
+            selectedTowerType = 'AOE';
+        }
     });
 };
 
@@ -47,7 +49,7 @@ export const inputSystem = (world) => {
 
     newWorld = addComponent(entityId, 'position', Position(x, y), newWorld);
     newWorld = addComponent(entityId, 'tower', Tower(towerConfig.range, towerConfig.damage, towerConfig.rateOfFire), newWorld);
-    newWorld = addComponent(entityId, 'renderable', Renderable('rectangle', '#8888ff', 15), newWorld);
+    newWorld = addComponent(entityId, 'renderable', Renderable('rectangle', towerConfig.color, 15), newWorld);
 
     return newWorld;
 };
