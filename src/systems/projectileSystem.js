@@ -1,6 +1,7 @@
 import { removeEntity } from '../core/esc.js';
 import { addGold } from './economySystem.js';
 
+
 const distance = (pos1, pos2) => {
     const dx = pos2.x - pos1.x;
     const dy = pos2.y - pos1.y;
@@ -30,24 +31,20 @@ export const projectileSystem = (world) => {
         const targetPos = target.components.position;
         const dist = distance(projPos, targetPos);
 
-        if(dist < 10) {
-             if (projComp.aoeRadius && projComp.aoeRadius > 0) {
+        if(dist < 5) {
+             if (projComp.type == 'aoe') {
                 const radius = projComp.aoeRadius;
-                console.log('worrks!')
                 world.entities.forEach(e => {
                     const pos = e.components.position;
                     const hp = e.components.health;
                     if (pos && hp) {
                         const d = distance(pos, targetPos);
-                        console.log('Checking entity:', e.id, 'distance:', d, 'has health:', !!hp);
                         if (d <= radius) {
-                            console.log('AOE HIT entity:', e.id);
                             enemyDamage[e.id] = (enemyDamage[e.id] || 0) + projComp.damage;
                         }
                     }
                 });
             } else {
-                // single-target damage
                 enemyDamage[target.id] = (enemyDamage[target.id] || 0) + projComp.damage;
 
             }
@@ -95,7 +92,6 @@ export const projectileSystem = (world) => {
                             ...health,
                             current: newHealth
                         },
-                        dead: newHealth < 0
                     }
                 };
             }

@@ -31,9 +31,3 @@ export const resetEconomy = () => {
     gold = 1000;
     lives = 20;
 };
-
-export const economySystem = (world) => {
-    if (!world || !world.entities) return world;
-
-    return world;
-}

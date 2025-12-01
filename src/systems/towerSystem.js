@@ -1,6 +1,5 @@
-import { createEntity, addComponent, queryEntities } from '../core/esc.js';
+import { createEntity, addComponent, queryEntities, hasComponent } from '../core/esc.js';
 import { Position, Projectile, Renderable} from '../components/index.js';
-import { selectedTowerType } from './inputSystem.js';
 import { TOWER_TYPES } from '../game/config.js';
 
 const distance = (pos1, pos2) => {
@@ -30,7 +29,7 @@ export const towerSystem = (world) => {
     towers.forEach(tower => {
         const towerComp = tower.components.tower;
         const towerPos = tower.components.position;
-        const towerConfig = TOWER_TYPES[selectedTowerType];3
+        const towerConfig = TOWER_TYPES[towerComp.type]
 
 
         const timeSinceLastShot = (newWorld.time || 0) - (towerComp.lastFired || 0);
@@ -45,8 +44,8 @@ export const towerSystem = (world) => {
         const projectileId = newWorld.nextEntityId - 1;
 
         newWorld = addComponent(projectileId, 'position', Position(towerPos.x, towerPos.y), newWorld);
-        newWorld = addComponent(projectileId, 'projectile', Projectile(5, towerComp.damage, target.id, towerConfig.aoeRadius), newWorld);
-        newWorld = addComponent(projectileId, 'renderable', Renderable('circle', towerComp.projColor, 4), newWorld);
+        newWorld = addComponent(projectileId, 'projectile', Projectile(towerConfig.type , 5, towerComp.damage, target.id, towerConfig.aoeRadius), newWorld);
+        newWorld = addComponent(projectileId, 'renderable', Renderable('circle', '#ffffff', 4), newWorld);
 
         const updatedEntities = newWorld.entities.map(entity => {
             if (entity.id === tower.id) {

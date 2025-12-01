@@ -1,6 +1,6 @@
 import { createEntity, addComponent} from '../core/esc.js';
 import { Position, Tower, Renderable } from '../components/index.js';
-import { spendGold, getGold } from './economySystem.js';
+import { spendGold } from './economySystem.js';
 import { TOWER_TYPES } from '../game/config.js';
 
 
@@ -37,7 +37,6 @@ export const inputSystem = (world) => {
 
 
     const canAfford = spendGold(towerConfig.cost);
-    console.log('   Can afford:', canAfford);
 
     if (!canAfford) {
         return world; 
@@ -48,7 +47,7 @@ export const inputSystem = (world) => {
     const entityId = newWorld.nextEntityId - 1;
 
     newWorld = addComponent(entityId, 'position', Position(x, y), newWorld);
-    newWorld = addComponent(entityId, 'tower', Tower(towerConfig.range, towerConfig.damage, towerConfig.rateOfFire), newWorld);
+    newWorld = addComponent(entityId, 'tower', Tower(selectedTowerType, towerConfig.range, towerConfig.damage, towerConfig.rateOfFire), newWorld);
     newWorld = addComponent(entityId, 'renderable', Renderable('rectangle', towerConfig.color, 15), newWorld);
 
     return newWorld;

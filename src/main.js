@@ -1,17 +1,16 @@
-import * as R from 'ramda';
-import { createWorld, createEntity, addComponent, runSystems } from './core/esc.js';
+import { createWorld, createEntity, addComponent} from './core/esc.js';
 import { initRenderSystem, renderSystem } from './systems/renderSystem.js';
 import { initInput, inputSystem } from './systems/inputSystem.js';
-import { Position, Renderable, Health, Path, Enemy, Velocity} from './components/index.js';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, ENEMY_TYPES, PATH_WAYPOINTS } from './game/config';
+import { Path } from './components/index.js';
 import { towerSystem } from './systems/towerSystem.js';
 import { projectileSystem } from './systems/projectileSystem.js';
-import { movementSystem } from './systems/simpleMovementSystem.js';
-import { getWaveInfo, startWave, waveSystem, resetWaves } from './systems/waveSystem.js';
+import { simpleMovementSystem } from './systems/simpleMovementSystem.js';
+import { waveSystem, resetWaves } from './systems/waveSystem.js';
 import { cleanupSystem, isGameOver, resetGameOver } from './systems/cleanupSystem.js';
-import { economySystem, getGold, getLives, resetEconomy } from './systems/economySystem.js';
+import { getGold, getLives, resetEconomy } from './systems/economySystem.js';
 import { TOWER_TYPES } from './game/config.js';
 import { getSelectedTowerType, setSelectedTowerType } from './systems/inputSystem.js';
+import { initLevel } from './systems/levelSystem.js';
 
 
 
@@ -25,33 +24,15 @@ let world = createWorld();
 const initWorld = () => {
   world = createWorld();
 
-  // Kreiraj path entitet
   world = createEntity(world);
   const pathEntityId = world.nextEntityId - 1;
   world = addComponent(pathEntityId, 'path', Path(PATH_WAYPOINTS), world);
 
-  console.log('✅ World initialized:', world);
   return world;
 };
 
 world = initWorld();
-
-const spawnEnemy = (world, type = ENEMY_TYPES.BASIC) => {
-    const config = ENEMY_TYPES[type];
-    const StartPos = PATH_WAYPOINTS[0];
-
-    const newWorld = createEntity(world);
-    const entityId = newWorld.nextEntityId - 1;
-
-    return R.pipe(
-        addComponent(entityId, 'position', Position(StartPos.x, StartPos.y)),
-        addComponent(entityId, 'health', Health(config.health, config.health)),
-        addComponent(entityId, 'enemy', Enemy(config.speed, config.reward)),
-        addComponent(entityId, 'path', Path(PATH_WAYPOINTS)),
-        addComponent(entityId, 'renderable', Renderable('circle', config.color, config.size))
-    )(newWorld);
-}
-
+let type = ''
 
 const updateUI = (world) => {
   if (!world || !world.entities) return world;
@@ -59,7 +40,6 @@ const updateUI = (world) => {
   const enemies = world.entities.filter(e => e.components.enemy).length;
   const towers = world.entities.filter(e => e.components.tower).length;
   const gold = getGold();
-  console.log('spendGold:', typeof spendGold);
   const lives = getLives();
 
   
@@ -70,7 +50,12 @@ const updateUI = (world) => {
 
   const selectedType = getSelectedTowerType();
   document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
-    const type = btn.id.includes('basic') ? 'BASIC' : 'SNIPER';
+    if(btn.id.includes('basic'))
+      type = 'BASIC'
+    else if (btn.id.includes('sniper'))
+      type = 'SNIPER'
+    else
+      type ='AOE'
     const cost = TOWER_TYPES[type].cost;
     
     btn.disabled = gold < cost;
@@ -87,19 +72,14 @@ const updateUI = (world) => {
 };
 
 const restartGame = () => {
-  console.log('🔄 Restarting game...');
-
-
+  resetGameOver();
   world = initWorld();
   resetEconomy();
-  resetGameOver();
   resetWaves();
   lastTime = 0;
-
+  gameLoopRunning = true;
   
   requestAnimationFrame(gameLoop);
-
-  console.log('✅ Game restarted!');
 };
 
 let lastTime = 0;
@@ -108,17 +88,14 @@ let gameLoopRunning = true;
 const gameLoop = (currentTime) => {
   const deltaTime = currentTime - lastTime;
   lastTime = currentTime;
-
   
   if (isGameOver()) {
     if (gameLoopRunning) {
-      console.log('💀 GAME OVER! Press R to restart');
       gameLoopRunning = false;
     }
     return; 
   }
 
-  
   world = {
     ...world,
     time: currentTime,
@@ -131,7 +108,6 @@ const gameLoop = (currentTime) => {
   world = movementSystem(world);
   world = towerSystem(world);
   world = projectileSystem(world);
-  world = economySystem(world);
   world = cleanupSystem(world);
   world = renderSystem(world);
   world = updateUI(world);
@@ -139,9 +115,6 @@ const gameLoop = (currentTime) => {
   requestAnimationFrame(gameLoop);
 };
 
-document.getElementById('btn-spawn-enemy').addEventListener('click', () => {
-  startWave();
-});
 
 window.addEventListener('keydown', (e) => {
   if (e.code === 'Space') {
@@ -149,17 +122,20 @@ window.addEventListener('keydown', (e) => {
     startWave();
   } else if (e.code === 'KeyR') {
     e.preventDefault();
-    gameLoopRunning = true;
     restartGame();
   }
 });
 
+
 document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
   btn.addEventListener('click', () => {
-    const type = btn.id.includes('basic') ? 'BASIC' : 'SNIPER';
-    console.log('🎯 Tower button clicked:', type);
+    if(btn.id.includes('basic'))
+      type = 'BASIC'
+    else if (btn.id.includes('sniper'))
+      type = 'SNIPER'
+    else
+      type ='AOE'
 
-    
     setSelectedTowerType(type);
 
     document.querySelectorAll('button[id^="btn-tower"]').forEach(b =>
@@ -168,5 +144,8 @@ document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
     btn.classList.add('active');
   });
 });
+
+// At startup
+initLevel(1); // Start with level 1
 
 requestAnimationFrame(gameLoop);
