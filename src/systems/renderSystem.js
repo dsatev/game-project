@@ -33,10 +33,10 @@ export const renderSystem = (world) => {
         if (entity.components.health) {
             renderHealthBar(position, entity.components.health, renderable.size);
         }
-    });
+    })
 
     return world;
-};
+}
 
 const renderHealthBar = (position, health, size) => {
     const barWidth = size * 2;
@@ -50,7 +50,7 @@ const renderHealthBar = (position, health, size) => {
     const healthRatio = health.current / health.max;
     ctx.fillStyle = healthRatio > 0.5 ? '#4caf50' : healthRatio > 0.2 ? '#ff9800' : '#f44336';
     ctx.fillRect(x, y, barWidth * healthRatio, barHeight);
-};
+}
 
 const renderPath = (world) => {
     const pathEntities = queryEntities(['path'], world)[0];
@@ -68,5 +68,5 @@ const renderPath = (world) => {
         ctx.lineTo(point.x, point.y);
     });
     ctx.stroke();   
-};
+}
 

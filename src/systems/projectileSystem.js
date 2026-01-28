@@ -43,7 +43,7 @@ export const projectileSystem = (world) => {
                             enemyDamage[e.id] = (enemyDamage[e.id] || 0) + projComp.damage;
                         }
                     }
-                });
+                })
             } else {
                 enemyDamage[target.id] = (enemyDamage[target.id] || 0) + projComp.damage;
 
@@ -71,12 +71,12 @@ export const projectileSystem = (world) => {
                                 y: projPos.y + moveY
                             }
                         }
-                    };
+                    }
                 }
                 return entity;
             })
-        };
-    });
+        }
+    })
 
     newWorld = {
         ...newWorld,
@@ -93,7 +93,7 @@ export const projectileSystem = (world) => {
                             current: newHealth
                         },
                     }
-                };
+                }
             }
             return entity;
         })
@@ -101,16 +101,16 @@ export const projectileSystem = (world) => {
 
     projectilesToRemove.forEach(projId => {
         newWorld = removeEntity(projId, newWorld);
-    });
+    })
 
     const deadEnemies = newWorld.entities.filter(e => 
         e.components.health && e.components.health.current <= 0
-    );
+    )
     deadEnemies.forEach(enemy => {
         const reward = enemy.components.enemy.reward;
         addGold(reward);
         newWorld = removeEntity(enemy.id, newWorld);
-    });
+    })
 
     return newWorld;
 }

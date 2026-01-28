@@ -58,16 +58,16 @@ export const towerSystem = (world) => {
                             lastFired: world.time
                         }
                     }
-                };
+                }
             }
             return entity;
-        });
+        })
 
         newWorld = {
             ...newWorld,
             entities: updatedEntities
-        };
-    });
+        }
+    })
 
     return newWorld;
-};
+}

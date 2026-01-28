@@ -6,7 +6,7 @@ export const getLives = () => lives;
 
 export const addGold = (amount) => {
     gold += amount;
-};
+}
 
 
 export const spendGold = (amount) => {
@@ -15,7 +15,7 @@ export const spendGold = (amount) => {
         return true;
     }
     return false;   
-};
+}
 
 export const loseLife = (amount = 1) => {
     lives -= amount;
@@ -25,9 +25,9 @@ export const loseLife = (amount = 1) => {
         return true; 
     }
     return false;
-};
+}
 
 export const resetEconomy = () => {
     gold = 1000;
     lives = 20;
-};
+}

@@ -54,37 +54,11 @@ export const TOWER_TYPES = {
         cost: 10
     }
 }
-export const LEVELS = {
-    1: {
-        name: "Forest Path",
-        pathway: [
-            { x: 50, y: 300 },
-            { x: 200, y: 250 },
-            { x: 350, y: 300 },
-            { x: 500, y: 200 },
-            { x: 700, y: 300 }
-        ],
-        waves: [
-            { enemyType: 'basic', count: 5, delay: 0, spawnInterval: 1000 },
-            { enemyType: 'basic', count: 8, delay: 5000, spawnInterval: 800 },
-            { enemyType: 'fast', count: 3, delay: 10000, spawnInterval: 1200 }
-        ],
-        difficulty: 1
-    },
-    2: {
-        name: "Mountain Route",
-        pathway: [
-            { x: 100, y: 100 },
-            { x: 300, y: 150 },
-            { x: 400, y: 400 },
-            { x: 600, y: 350 },
-            { x: 750, y: 150 }
-        ],
-        waves: [
-            { enemyType: 'basic', count: 10, delay: 0, spawnInterval: 600 },
-            { enemyType: 'tank', count: 2, delay: 8000, spawnInterval: 2000 },
-            { enemyType: 'fast', count: 6, delay: 12000, spawnInterval: 900 }
-        ],
-        difficulty: 2
-    }
-};
+export const PATH_WAYPOINTS = [
+    {x: 0, y: 300},
+    {x: 200, y: 300},
+    {x: 200, y: 100},
+    {x: 600, y: 100},
+    {x: 600, y: 500},
+    {x: 800, y: 500}
+];

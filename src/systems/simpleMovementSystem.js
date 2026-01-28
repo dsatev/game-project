@@ -1,81 +1,64 @@
-import { getPathway } from './levelSystem.js';
-import { removeEntity } from '../core/esc.js';
-
-const distance = (pos1, pos2) => {
-    const dx = pos2.x - pos1.x;
-    const dy = pos2.y - pos1.y;
-    return Math.sqrt(dx * dx + dy * dy);
-};
-
-export const simpleMovementSystem = (world) => {
+export const movementSystem = (world) => {
     if (!world || !world.entities) return world;
 
-    const pathway = getPathway();
-    let newWorld = world;
-    const enemiesToRemove = [];
+    const updatedEntities = world.entities.map(entity => {
+        if (!entity.components.enemy || !entity.components.position || !entity.components.path) {
+            return entity;
+        }
 
-    newWorld = {
-        ...newWorld,
-        entities: newWorld.entities.map(entity => {
-            if (!entity.components.enemy || !entity.components.position) {
-                return entity;
-            }
+        const pos = entity.components.position;
+        const path = entity.components.path;
+        const enemy = entity.components.enemy;
 
-            const pos = entity.components.position;
-            const enemy = entity.components.enemy;
-            const speed = enemy.speed;
-
-            // Get next waypoint
-            const nextWaypoint = pathway[enemy.waypoint];
-            if (!nextWaypoint) {
-                enemiesToRemove.push(entity.id);
-                return entity;
-            }
-
-            const dist = distance(pos, nextWaypoint);
-
-            // Reached waypoint, move to next
-            if (dist < speed) {
-                if (enemy.waypoint < pathway.length - 1) {
-                    return {
-                        ...entity,
-                        components: {
-                            ...entity.components,
-                            enemy: {
-                                ...enemy,
-                                waypoint: enemy.waypoint + 1
-                            }
-                        }
-                    };
-                } else {
-                    // Reached end of path
-                    enemiesToRemove.push(entity.id);
-                    return entity;
-                }
-            }
-
-            // Move towards waypoint
-            const dx = nextWaypoint.x - pos.x;
-            const dy = nextWaypoint.y - pos.y;
-            const moveX = (dx / dist) * speed;
-            const moveY = (dy / dist) * speed;
-
+        if (!path.waypoints || path.waypoints.length === 0 || path.currentWaypointIndex >= path.waypoints.length) {
             return {
                 ...entity,
                 components: {
                     ...entity.components,
-                    position: {
-                        x: pos.x + moveX,
-                        y: pos.y + moveY
+                    reachedEnd: true
+                }
+            }
+        }
+
+        const target = path.waypoints[path.currentWaypointIndex];
+
+        if (!target || typeof target.x === 'undefined' || typeof target.y === 'undefined') {
+            return entity;
+        }
+        const dx = target.x - pos.x;
+        const dy = target.y - pos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 5) {
+            return {
+                ...entity,
+                components: {
+                    ...entity.components,
+                    path: {
+                        ...path,
+                        currentWaypointIndex: path.currentWaypointIndex + 1
                     }
                 }
-            };
-        })
-    };
+            }
+        }   
 
-    enemiesToRemove.forEach(id => {
-        newWorld = removeEntity(id, newWorld);
-    });
+        const moveX = (dx / distance) * enemy.speed;
+        const moveY = (dy / distance) * enemy.speed;
 
-    return newWorld;
-};
+        return {
+            ...entity,
+            components: {
+                ...entity.components,
+                position: {
+                    ...pos,
+                    x: pos.x + moveX,
+                    y: pos.y + moveY
+                }
+            }
+        }
+    })
+    return {
+        ...world,
+        entities: updatedEntities
+    }
+}

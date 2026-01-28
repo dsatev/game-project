@@ -13,8 +13,8 @@ export const initInput = (canvas) => {
         lastClickPos = {
             x: event.clientX - rect.left,
             y: event.clientY - rect.top
-        };
-    });
+        }
+    })
 
     window.addEventListener('keydown', (event) => {
         if (event.key === '1') {
@@ -24,8 +24,8 @@ export const initInput = (canvas) => {
         } else if (event.key === '3') {
             selectedTowerType = 'AOE';
         }
-    });
-};
+    })
+}
 
 export const inputSystem = (world) => {
     if (!lastClickPos) return world;
@@ -51,10 +51,10 @@ export const inputSystem = (world) => {
     newWorld = addComponent(entityId, 'renderable', Renderable('rectangle', towerConfig.color, 15), newWorld);
 
     return newWorld;
-};
+}
 
 export const getSelectedTowerType = () => selectedTowerType;
 
 export const setSelectedTowerType = (type) => {
     selectedTowerType = type;
-};
+}

@@ -3,14 +3,13 @@ import { initRenderSystem, renderSystem } from './systems/renderSystem.js';
 import { initInput, inputSystem } from './systems/inputSystem.js';
 import { Path } from './components/index.js';
 import { towerSystem } from './systems/towerSystem.js';
+import { movementSystem } from './systems/simpleMovementSystem.js';
 import { projectileSystem } from './systems/projectileSystem.js';
-import { simpleMovementSystem } from './systems/simpleMovementSystem.js';
-import { waveSystem, resetWaves } from './systems/waveSystem.js';
+import { waveSystem, resetWaves, startWave    } from './systems/waveSystem.js';
 import { cleanupSystem, isGameOver, resetGameOver } from './systems/cleanupSystem.js';
 import { getGold, getLives, resetEconomy } from './systems/economySystem.js';
-import { TOWER_TYPES } from './game/config.js';
+import { TOWER_TYPES, PATH_WAYPOINTS } from './game/config.js';
 import { getSelectedTowerType, setSelectedTowerType } from './systems/inputSystem.js';
-import { initLevel } from './systems/levelSystem.js';
 
 
 
@@ -29,9 +28,10 @@ const initWorld = () => {
   world = addComponent(pathEntityId, 'path', Path(PATH_WAYPOINTS), world);
 
   return world;
-};
+}
 
 world = initWorld();
+
 let type = ''
 
 const updateUI = (world) => {
@@ -66,10 +66,10 @@ const updateUI = (world) => {
     } else {
       btn.classList.remove('active');
     }
-  });
+  })
 
   return world;
-};
+}
 
 const restartGame = () => {
   resetGameOver();
@@ -80,7 +80,7 @@ const restartGame = () => {
   gameLoopRunning = true;
   
   requestAnimationFrame(gameLoop);
-};
+}
 
 let lastTime = 0;
 let gameLoopRunning = true;
@@ -100,7 +100,7 @@ const gameLoop = (currentTime) => {
     ...world,
     time: currentTime,
     deltaTime: deltaTime
-  };
+  }
 
 
   world = inputSystem(world);
@@ -113,7 +113,7 @@ const gameLoop = (currentTime) => {
   world = updateUI(world);
 
   requestAnimationFrame(gameLoop);
-};
+}
 
 
 window.addEventListener('keydown', (e) => {
@@ -124,7 +124,7 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     restartGame();
   }
-});
+})
 
 
 document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
@@ -140,12 +140,10 @@ document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
 
     document.querySelectorAll('button[id^="btn-tower"]').forEach(b =>
       b.classList.remove('active')
-    );
+    )
     btn.classList.add('active');
-  });
-});
+  })
+})
 
-// At startup
-initLevel(1); // Start with level 1
 
 requestAnimationFrame(gameLoop);
