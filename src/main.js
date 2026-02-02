@@ -85,7 +85,7 @@ const restartGame = () => {
   requestAnimationFrame(gameLoop);
 };
 
-// Funkcija za prikaz game over poruke
+
 const showGameOverScreen = () => {
   console.log('showGameOverScreen pozvan!');
   const modal = document.getElementById('gameOverModal');
@@ -105,7 +105,7 @@ const showGameOverScreen = () => {
   console.log('currentWave:', currentWave, 'totalWaves:', totalWaves, 'lives:', lives);
   console.log('waveState:', waveInfo);
   
-  // Pobjeđujemo ako su svi valovi završeni (currentWave >= totalWaves) i još imamo živote
+  
   const isVictory = currentWave >= totalWaves && lives > 0;
   
   console.log('isVictory:', isVictory);
@@ -164,9 +164,7 @@ const gameLoop = (currentTime) => {
       gameLoopRunning = false;
       showGameOverScreen();
     }
-    // Keep rendering the final frame, don't return
   } else {
-    // Only run systems if game is not over
     world = R.assoc('time', currentTime, world);
     world = R.assoc('deltaTime', deltaTime, world);
     world = systemsPipeline(deltaTime, PATH_WAYPOINTS)(world);
@@ -183,7 +181,6 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     restartGame();
   } else if (e.code === 'KeyT') {
-    // Test - simulira pobjedu
     e.preventDefault();
     world.waveState.currentWaveIndex = 5;
     console.log('Test mode - skipped to wave 5 (victory condition)');
@@ -210,7 +207,6 @@ document.querySelectorAll('button[id^="btn-tower"]').forEach(btn => {
   btn.addEventListener('click', handleTowerButtonClick(btn));
 });
 
-// Restart button u modal-u
 document.getElementById('restartBtn').addEventListener('click', restartGame);
 
 requestAnimationFrame(gameLoop);

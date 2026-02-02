@@ -10,7 +10,7 @@ let lastKeyPressed = null;
 
 export const initUIState = () => ({
     selectedTowerType: 'BASIC'
-});
+})
 
 export const initInput = (canvas) => {
     canvas.addEventListener('click', (event) => {
@@ -39,7 +39,7 @@ const updateSelectedTowerType = R.curry((world, keyPressed) => {
         );
     }
     return world;
-});
+})
 
 
 export const getSelectedTowerType = (world) => 
@@ -50,7 +50,7 @@ export const setSelectedTowerType = R.curry((type, world) => {
         R.assoc('selectedTowerType', type, world.uiState || initUIState()),
         world
     );
-});
+})
 
 export const inputSystem = (world) => {
     let newWorld = world;

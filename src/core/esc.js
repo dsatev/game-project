@@ -76,7 +76,5 @@ export const queryEntities = R.curry((componentNames, world) =>
     )
 )
 
-export const runSystems = R.curry((systems, world) =>
-    R.pipe(...systems)(world)
-)
+
 

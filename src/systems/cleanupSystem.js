@@ -4,7 +4,7 @@ import { loseLife } from "./economySystem.js";
 
 export const initGameState = () => ({
     isGameOver: false
-});
+})
 
 export const isGameOver = (world) => world.gameState?.isGameOver ?? false;
 
@@ -13,15 +13,15 @@ export const setGameOver = (world) => {
     return R.assoc('gameState',
         R.assoc('isGameOver', true, world.gameState || initGameState()),
         world
-    );
-};
+    )
+}
 
 export const resetGameOver = (world) => {
     return R.assoc('gameState',
         R.assoc('isGameOver', false, world.gameState || initGameState()),
         world
-    );
-};
+    )
+}
 
 
 const hasReachedEnd = (entity) => {
@@ -29,14 +29,14 @@ const hasReachedEnd = (entity) => {
         entity.components.position &&
         entity.components.path &&
         entity.components.path.currentWaypointIndex >= entity.components.path.waypoints.length;
-};
+}
 
 
 const isOffscreen = (entity) => {
     if (!entity.components.projectile || !entity.components.position) return false;
     const pos = entity.components.position;
     return pos.x < -100 || pos.x > 800 || pos.y < -100 || pos.y > 600;
-};
+}
 
 
 const handleEscapedEnemies = (world) => {
@@ -56,8 +56,8 @@ const handleEscapedEnemies = (world) => {
         }
         
         return newWorld;
-    }, world);
-};
+    }, world)
+}
 
 
 const handleOffscreenProjectiles = (world) => {
@@ -66,7 +66,7 @@ const handleOffscreenProjectiles = (world) => {
     return offscreenProjectiles.reduce((accWorld, proj) => 
         removeEntity(proj.id, accWorld)
     , world);
-};
+}
 
 export const cleanupSystem = (world) => {
     if (!world || !world.entities) return world;
@@ -76,4 +76,4 @@ export const cleanupSystem = (world) => {
         handleEscapedEnemies,
         handleOffscreenProjectiles
     )(world);
-};
+}
