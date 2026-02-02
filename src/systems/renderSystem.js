@@ -1,4 +1,4 @@
-import { queryEntities } from '../core/esc';
+import { queryEntities } from '../core/esc.js';
 
 let canvas, ctx;
 
